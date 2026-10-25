@@ -1,6 +1,6 @@
 # Entrelinhas · Alpha experimental
 
-Demonstração pública de uma partida em português brasileiro. React + TypeScript + Vite, arquivos estáticos, sem API ou credenciais.
+Demonstração pública de uma partida em português brasileiro, com identidade oficial B — Playful Premium. React + TypeScript + Vite, arquivos estáticos, sem API ou credenciais. Símbolo modular E, faixa cobalto, seleção lima e assinatura de marca derivam do estudo escolhido pelo proprietário.
 
 ```sh
 npm ci
