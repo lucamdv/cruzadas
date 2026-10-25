@@ -1,0 +1,155 @@
+/* Official B: extracted from the selected design-lab identity and game surface. */
+:root { font-family: Arial, sans-serif; color: #172359; background: #f8f7ea; }
+.official-b {
+  --ink: #172359; --muted: #4e5879; --page: #f8f7ea; --paper: #fff;
+  --rule: #c9cecc; --active: #daf565; --selected: #e2e8fc;
+  --accent: #2448dc; --brand-pop: #daf565;
+  display: grid; grid-template-columns: 245px minmax(0, 1fr); column-gap: 40px;
+  min-height: 100dvh; padding-right: 40px; background: var(--page); color: var(--ink);
+  font-family: Arial, sans-serif;
+}
+.official-b .identity-header { grid-column: 1; grid-row: 1 / 3; display: flex; flex-direction: column; padding: 37px 26px 30px; background: var(--accent); color: var(--page); }
+.official-b .brand { color: var(--page); }
+.official-b .brand-mark { display: block; flex-shrink: 0; width: 57px; height: 57px; }
+.official-b .brand > .brand-mark { margin-bottom: 17px; }
+.official-b .wordmark { font: 900 44px/.86 'Arial Black', Arial, sans-serif; letter-spacing: -3.4px; }
+.official-b .wordmark > span { display: block; }
+.official-b .wordmark-dot { display: inline; color: var(--brand-pop); }
+.official-b .edition { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; margin: 24px 0 0; font-size: 12px; line-height: 1.5; }
+.official-b .edition-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--brand-pop); }
+.official-b .edition-number { border-left: 1px solid #7189eb; padding-left: 8px; font-weight: 700; }
+.official-b .play-art { display: grid; grid-template-columns: 1fr 1fr; width: 170px; height: 170px; gap: 5px; margin-top: 72px; transform: rotate(-7deg); }
+.official-b .play-art > span { display: grid; place-items: center; border-radius: 7px; background: var(--page); color: var(--accent); font: 900 50px/.9 'Arial Black', Arial, sans-serif; }
+.official-b .play-art > span:nth-child(2) { border-radius: 50%; background: var(--active); }
+.official-b .play-art > span:nth-child(3) { background: var(--active); }
+.official-b .play-art > span:nth-child(4) { border-radius: 5px 28px 5px 5px; font-size: 32px; }
+.official-b .play-art .brand-mark { width: 43px; height: 43px; --brand-pop: #2448dc; }
+.official-b .rail-thought { margin-top: auto; padding-top: 160px; }
+.official-b .rail-thought p { font-size: 12px; line-height: 1.5; }
+.official-b .rail-thought > span { display: block; margin-top: 22px; font: 900 30px/1 'Arial Black', Arial, sans-serif; letter-spacing: -1px; }
+.official-b .rail-thought .brand-mark { width: 28px; height: 28px; margin-top: 35px; }
+.official-b .game-container { grid-column: 2; min-width: 0; }
+.official-b .preview-shell { max-width: 1440px; margin: auto; padding: 0; color: var(--ink); }
+.official-b .identity-intro { display: flex; justify-content: space-between; align-items: flex-end; gap: 15px; margin: 35px 0 22px; }
+.official-b .identity-kicker { display: flex; align-items: center; gap: 9px; margin: 0 0 12px; color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: 1.4px; line-height: 1.5; text-transform: uppercase; }
+.official-b .identity-kicker > span { width: 10px; height: 10px; flex-shrink: 0; border-radius: 50%; background: var(--accent); }
+.official-b .identity-intro h1 { margin: 0; font: 900 46px/.96 'Arial Black', Arial, sans-serif; letter-spacing: -2.9px; overflow-wrap: normal; }
+.official-b .identity-intro h1 br { display: none; }
+.official-b .identity-intro h1 .mobile-break { display: block; }
+.official-b .identity-subtitle { margin: 12px 0 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+.official-b .puzzle-stamp { display: flex; align-items: center; justify-content: center; gap: 5px; flex-shrink: 0; width: 125px; aspect-ratio: 1; margin: 0; padding: 12px 17px; border-radius: 50%; background: var(--active); transform: rotate(9deg); }
+.official-b .puzzle-stamp strong { font: 900 36px/1 'Arial Black', Arial, sans-serif; letter-spacing: -3px; }
+.official-b .puzzle-stamp > span { font-size: 10px; font-weight: 700; line-height: 1.3; }
+.official-b .alpha-notice { display: flex; align-items: baseline; flex-wrap: wrap; column-gap: 16px; row-gap: 4px; margin-bottom: 20px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.official-b .alpha-notice p { margin: 0; }
+.official-b .alpha-notice p:first-child { color: var(--accent); font-weight: 700; }
+.official-b .play-layout { display: grid; grid-template-columns: minmax(0, 515px) minmax(0, 1fr); gap: 29px; align-items: start; }
+.official-b .board-section { width: 100%; max-width: none; margin: 0; min-width: 0; }
+.official-b .current-clue { position: static; min-height: 108px; padding: 12px 16px; border: 2px solid var(--accent); border-radius: 0; background: var(--page); box-shadow: none; }
+.official-b .clue-meta { color: var(--accent); font: 700 14px/1.4 Arial, sans-serif; letter-spacing: .5px; text-transform: uppercase; }
+.official-b .clue-meta button { width: 44px; height: 44px; min-width: 44px; border: 0; background: var(--accent); color: var(--page); font-size: 25px; }
+.official-b .current-clue p { margin: 4px 0 0; color: var(--ink); font: 700 22px/1.3 Arial, sans-serif; letter-spacing: -.6px; }
+.official-b .board-meta { margin: 6px 0 3px; color: var(--muted); font-size: 14px; line-height: 1.4; }
+.official-b .board-meta button { min-height: 44px; color: var(--muted); font-size: 14px; text-underline-offset: 3px; }
+.official-b .board-entry { border: 2px solid var(--accent); border-radius: 0; background: var(--paper); }
+.official-b .board-scroll { border-radius: 0; }
+.official-b .crossword-grid { width: 100%; gap: 3px; padding: 10px; border-radius: 0; background: var(--accent); }
+.official-b .crossword-grid.zoomed { min-width: 620px; }
+.official-b .block { background: var(--accent); }
+.official-b .cell { min-height: 0; border-radius: 2px; background: var(--page); color: var(--ink); font: 600 25px/1 'Arial Black', Arial, sans-serif; transition: background-color 120ms ease, box-shadow 120ms ease; }
+.official-b .cell small { top: 3px; left: 4px; color: #374b94; font: 700 10px/1 Arial, sans-serif; }
+.official-b .cell > span { padding-top: 6px; }
+.official-b .cell.in-word { background: var(--selected); }
+.official-b .cell.current { background: var(--active); box-shadow: inset 0 0 0 2px var(--ink); }
+.official-b .keyboard-entry { border-top: 2px solid var(--accent); padding: 14px; }
+.official-b .input-label { color: var(--accent); font: 700 14px/1.4 Arial, sans-serif; letter-spacing: .6px; text-transform: uppercase; }
+.official-b .letter-input { height: 48px; border: 2px solid var(--accent); border-radius: 0; padding: 10px 12px; background: var(--paper); color: var(--ink); font-size: 18px; }
+.official-b .letter-input::placeholder { color: var(--muted); font-size: 16px; opacity: 1; }
+.official-b .keyboard-help { margin: 8px 0 0; color: var(--muted); font-size: 12px; line-height: 1.65; }
+.official-b .actions { gap: 8px; margin-top: 15px; }
+.official-b .actions button, .official-b .clue-navigation button { min-height: 44px; padding: 11px 14px; border: 1px solid var(--ink); border-radius: 0; background: transparent; color: var(--ink); font-size: 14px; font-weight: 600; transition: background-color 120ms ease, transform 120ms ease; }
+.official-b .actions .primary { margin-left: auto; border-color: var(--accent); background: var(--accent); color: var(--paper); padding-inline: 20px; }
+.official-b .feedback { color: var(--ink); font-size: 14px; }
+.official-b .clue-navigation { margin-top: 13px; padding-top: 5px; border-color: var(--rule); }
+.official-b .clue-navigation button { border: 0; padding-inline: 0; color: var(--muted); }
+.official-b .clues { display: block; min-width: 0; }
+.official-b .clues h2 { display: flex; align-items: center; gap: 10px; margin: 0 0 6px; padding-bottom: 13px; border-bottom: 2px solid var(--ink); color: var(--ink); font: 900 24px/1.2 'Arial Black', Arial, sans-serif; letter-spacing: -1px; }
+.official-b .clues h2::before { content: '→'; display: grid; place-items: center; flex-shrink: 0; width: 27px; height: 27px; border-radius: 50%; background: var(--active); color: var(--ink); font: 700 20px/1 Arial, sans-serif; }
+.official-b .clues section:last-child h2::before { content: '↓'; }
+.official-b .clues section + section { margin-top: 24px; }
+.official-b .clues li { border-color: var(--rule); }
+.official-b .clues li button { gap: 8px; min-height: 54px; padding: 11px 7px; border-radius: 2px; color: var(--ink); font: 400 18px/1.5 Arial, sans-serif; transition: background-color 120ms ease; }
+.official-b .clues li button[aria-current=true] { background: var(--active); box-shadow: inset 3px 0 var(--accent); }
+.official-b .clue-number { min-width: 19px; color: var(--accent); font: 700 14px/1.5 Arial, sans-serif; }
+.official-b .clues em { color: var(--muted); font-size: 14px; }
+.official-b .restart { margin-top: 22px; padding-top: 13px; border-top: 1px solid var(--rule); }
+.official-b .restart button { border: 0; padding-left: 0; color: var(--muted); }
+.official-b .preview-footer { margin: 10px 0 0; padding: 10px 0 16px; border: 0; text-align: left; color: var(--muted); font: 12px/1.6 Arial, sans-serif; }
+.official-b .identity-footer { grid-column: 2; display: flex; align-items: center; gap: 10px; width: 100%; max-width: 1440px; margin: auto; padding: 20px 0 25px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 12px; line-height: 1.6; }
+.official-b .identity-footer .brand-mark { width: 22px; height: 22px; color: var(--accent); }
+.official-b .identity-footer > span:first-of-type { max-width: 200px; }
+.official-b .identity-footer > span:last-child { margin-left: auto; }
+.official-b button:focus-visible, .official-b input:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.official-b .cell:focus-visible { outline-offset: -3px; outline-color: var(--ink); }
+.official-b .result-card { border: 2px solid var(--accent); border-radius: 0; background: var(--selected); color: var(--ink); }
+.official-b .result-card h2 { font: 900 30px/1.2 'Arial Black', Arial, sans-serif; }
+.official-b .eyebrow { color: var(--accent); }
+@media (hover: hover) {
+  .official-b .actions button:hover:not(:disabled) { transform: translateY(-2px); background: var(--selected); }
+  .official-b .actions .primary:hover:not(:disabled) { background: var(--ink); color: var(--paper); }
+  .official-b .clues li button:hover:not(:disabled) { background: var(--selected); }
+}
+@media (min-width: 1600px) { .official-b { grid-template-columns: 265px minmax(0, 1fr); column-gap: 48px; padding-right: 48px; } .official-b .play-layout { grid-template-columns: minmax(0, 600px) minmax(0, 1fr); gap: 48px; } }
+@media (max-width: 1200px) and (min-width: 901px) { .official-b { grid-template-columns: 210px minmax(0, 1fr); gap: 28px; padding-right: 28px; } .official-b .play-layout { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 24px; } .official-b .identity-header { padding-inline: 20px; } .official-b .puzzle-stamp { width: 100px; } .official-b .identity-intro h1 { font-size: 40px; } }
+@media (max-width: 900px) {
+  .official-b { display: block; padding: 0 24px; }
+  .official-b .identity-header { display: flex; flex-direction: row; align-items: center; gap: 20px; margin: 0 -24px; padding: 24px; }
+  .official-b .brand { display: flex; align-items: center; gap: 13px; }
+  .official-b .brand > .brand-mark { width: 45px; height: 45px; margin: 0; }
+  .official-b .wordmark { font-size: 32px; letter-spacing: -2px; }
+  .official-b .edition { margin: 0 0 0 auto; max-width: 180px; }
+  .official-b .play-art, .official-b .rail-thought { display: none; }
+  .official-b .identity-intro { margin: 28px 0 20px; }
+  .official-b .identity-intro h1 { font-size: 43px; }
+  .official-b .identity-intro h1 br { display: block; }
+  .official-b .play-layout { grid-template-columns: minmax(0, 1fr); gap: 35px; }
+  .official-b .board-section { max-width: 550px; margin: auto; }
+  .official-b .current-clue { position: sticky; top: 8px; z-index: 5; box-shadow: 0 3px 0 var(--page); }
+  .official-b .clues { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
+  .official-b .clues section + section { margin: 0; }
+  .official-b .identity-footer > span:first-of-type { max-width: none; }
+}
+@media (max-width: 560px) {
+  .official-b { padding-inline: 18px; }
+  .official-b .identity-header { gap: 10px; margin-inline: -18px; padding: 22px 18px; }
+  .official-b .brand { gap: 9px; }
+  .official-b .brand > .brand-mark { width: 35px; height: 35px; }
+  .official-b .wordmark { font-size: 29px; letter-spacing: -1.8px; }
+  .official-b .edition { max-width: 115px; gap: 4px; font-size: 11px; }
+  .official-b .edition-number { display: none; }
+  .official-b .identity-intro { margin: 27px 0 18px; }
+  .official-b .identity-kicker { font-size: 9px; letter-spacing: 1.1px; }
+  .official-b .identity-intro h1 { font-size: 40px; letter-spacing: -2.3px; }
+  .official-b .identity-subtitle { font-size: 14px; }
+  .official-b .puzzle-stamp { display: none; }
+  .official-b .alpha-notice { margin-bottom: 18px; }
+  .official-b .current-clue { min-height: 110px; padding: 10px 12px; }
+  .official-b .current-clue p { font-size: 21px; }
+  .official-b .clue-meta { font-size: 13px; }
+  .official-b .crossword-grid { padding: 7px; gap: 3px; }
+  .official-b .cell { font-size: 19px; }
+  .official-b .cell small { top: 2px; left: 2px; font-size: 8px; }
+  .official-b .keyboard-entry { padding: 12px; }
+  .official-b .input-label { font-size: 13px; letter-spacing: .2px; }
+  .official-b .actions button { flex: 1 1 auto; padding-inline: 12px; }
+  .official-b .actions .primary { flex-basis: 100%; margin-left: 0; }
+  .official-b .clues { grid-template-columns: minmax(0, 1fr); gap: 29px; }
+  .official-b .clues h2 { font-size: 26px; }
+  .official-b .clues li button { padding: 13px 8px; }
+  .official-b .identity-footer { align-items: flex-start; flex-wrap: wrap; gap: 8px; }
+  .official-b .identity-footer > span:first-of-type { flex: 1; }
+  .official-b .identity-footer > span:last-child { flex-basis: 100%; margin: 4px 0 0 30px; }
+}
+@media (max-width: 350px) { .official-b { padding-inline: 14px; } .official-b .identity-header { margin-inline: -14px; padding-inline: 14px; } .official-b .identity-intro h1 { font-size: 35px; letter-spacing: -2px; } .official-b .cell { font-size: 17px; } }
+@media (max-width: 900px) and (max-height: 520px) { .official-b .current-clue { top: 0; min-height: 0; padding: 8px 12px; } .official-b .current-clue p { margin: 0; font-size: 20px; line-height: 1.25; } }
+@media (prefers-reduced-motion: reduce) { .official-b *, .official-b *::before, .official-b *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } .official-b .actions button:hover { transform: none; } }

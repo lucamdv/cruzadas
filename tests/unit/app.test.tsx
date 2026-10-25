@@ -7,7 +7,23 @@ describe('Alpha público do Entrelinhas', () => {
   it('renderiza um main nomeado com título acessível em português', () => {
     render(<App />);
     const main = screen.getByRole('main', { name: 'Entrelinhas' });
-    expect(within(main).getByRole('heading', { level: 1, name: 'Entrelinhas' })).toBeVisible();
+    expect(within(main).getByRole('heading', { level: 1, name: 'Uma letra. Muitas possibilidades.' })).toBeVisible();
+    expect(screen.getByRole('img', { name: 'Entrelinhas' })).toBeVisible();
+  });
+
+  it('mantém o campo nativo durante composição e seleção de pistas na identidade oficial', () => {
+    render(<App />);
+    const input = screen.getByRole('textbox', { name: 'Digite a resposta' });
+    fireEvent.compositionStart(input);
+    fireEvent.input(input, { target: { value: 'SÓL' }, isComposing: true });
+    expect(screen.getByText('0 de 39 casas preenchidas')).toBeVisible();
+    fireEvent.compositionEnd(input, { data: 'SÓL' });
+    fireEvent.input(input, { target: { value: 'SÓL' }, inputType: 'insertFromComposition' });
+    expect(screen.getByText('3 de 39 casas preenchidas')).toBeVisible();
+    fireEvent.click(screen.getByRole('button', { name: 'Próxima pista →' }));
+    expect(screen.getByRole('textbox', { name: 'Digite a resposta' })).toBe(input);
+    expect(input).toHaveFocus();
+    expect(screen.getByRole('img', { name: 'Entrelinhas' })).toBeVisible();
   });
 
   it('abre uma demonstração jogável sem dependência do servidor privado', () => {
