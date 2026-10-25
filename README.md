@@ -1,4 +1,6 @@
-# Entrelinhas — kit canônico para Codex (V1)
+# Entrelinhas · Alpha experimental
+
+Alpha jogável autorizado: veja [ALPHA.md](ALPHA.md) para executar, publicar e conhecer as limitações. A documentação abaixo preserva o kit original e descreve a V1 planejada.
 
 **Versão documental:** 1.0.0 | **Data:** 2026-10-20 | **Estado:** design e plano prontos para revisão humana; **nenhum código de produto foi implementado**.
 
