@@ -1,17 +1,25 @@
 import{useEffect,useRef,useState}from'react';import type{KeyboardEvent,ReactNode}from'react';
 import type{PreviewPuzzle}from'../../domain/preview-types';import type{CellKey,GameSession}from'../../content/schemas';
+import type { GameRepository } from '../../storage/repository';
 import{activeEntry,applyLetter,backspace,checkWord,createGameSession,enterText,entryCells,finishSession,moveCell,moveClue,orderedEntries,revealLetter,selectCell,selectEntry}from'../../domain/session';
 import'./preview-game.css';
 const now=()=>new Date().toISOString();
-export function PreviewGame({puzzle,audience='private-preview',onRestart,introduction}:{puzzle:PreviewPuzzle;audience?:'private-preview'|'public-demo';onRestart?:()=>void;introduction?:ReactNode}){
+export function PreviewGame({puzzle,audience='private-preview',onRestart,introduction,repository}:{puzzle:PreviewPuzzle;audience?:'private-preview'|'public-demo';onRestart?:()=>void;introduction?:ReactNode;repository?:GameRepository}){
  const publicDemo=audience==='public-demo';
- const[session,setSession]=useState(()=>createGameSession(puzzle,crypto.randomUUID(),now())),current=useRef(session),input=useRef<HTMLInputElement>(null),result=useRef<HTMLHeadingElement>(null),checkButton=useRef<HTMLButtonElement>(null),board=useRef<HTMLElement>(null);
- const[message,setMessage]=useState(''),[zoom,setZoom]=useState(false),clockPaused=useRef(false),syncClock=useRef<()=>void>(()=>{}),composing=useRef(false),ignoreFinal=useRef<string|null>(null),deleted=useRef(false),timers=useRef<number[]>([]),activeMs=useRef(0);
- const update=(fn:(s:GameSession)=>GameSession)=>{const next=fn(current.current);current.current=next;setSession(next);};
+ const[session,setSession]=useState(()=>repository?.session??createGameSession(puzzle,crypto.randomUUID(),now())),current=useRef(session),input=useRef<HTMLInputElement>(null),result=useRef<HTMLHeadingElement>(null),checkButton=useRef<HTMLButtonElement>(null),board=useRef<HTMLElement>(null);
+ const[message,setMessage]=useState(''),[zoom,setZoom]=useState(false),clockPaused=useRef(false),syncClock=useRef<()=>void>(()=>{}),resetClock=useRef<(seconds:number,exact?:boolean)=>void>(()=>{}),composing=useRef(false),ignoreFinal=useRef<string|null>(null),deleted=useRef(false),timers=useRef<number[]>([]),activeMs=useRef(session.activeSeconds*1000);
+ const update=(fn:(s:GameSession)=>GameSession)=>{const next=fn(current.current);if(next===current.current)return;current.current=next;setSession(next);void repository?.saveSession(next);};
  const focus=()=>input.current?.focus({preventScroll:true});
  const later=(fn:()=>void)=>{const id=window.setTimeout(()=>{timers.current=timers.current.filter(t=>t!==id);fn();},0);timers.current.push(id);};
  const commit=(text:string)=>{try{update(s=>enterText(s,puzzle,text,now()));setMessage('');}catch{setMessage('Use letras; o texto precisa caber na resposta selecionada.');}if(input.current)input.current.value='';};
  useEffect(()=>()=>timers.current.forEach(t=>clearTimeout(t)),[]);
+ useEffect(()=>{
+  if(!repository)return;
+  const disconnect=repository.connect(()=>syncClock.current());
+  const unsubscribe=repository.subscribe(()=>{const next=repository.session;if(next.sessionId!==current.current.sessionId||next===current.current)return;resetClock.current(next.activeSeconds,next.activeSeconds<current.current.activeSeconds);current.current=next;setSession(next);});
+  void repository.saveSession(current.current);
+  return()=>{unsubscribe();disconnect();};
+ },[repository]);
  useEffect(()=>{
   const el=input.current;if(!el)return;
   const before=(event:InputEvent)=>{if(composing.current||!['deleteContentBackward','deleteContentForward'].includes(event.inputType))return;event.preventDefault();if(!deleted.current)update(s=>event.inputType==='deleteContentBackward'?backspace(s,puzzle,now()):s.activeCell?applyLetter(s,s.activeCell,'',now()):s);deleted.current=true;el.value='';later(()=>{deleted.current=false;});};
@@ -19,9 +27,11 @@ export function PreviewGame({puzzle,audience='private-preview',onRestart,introdu
  },[puzzle]);
  useEffect(()=>{
   let interval:number|undefined,last=performance.now();
-  const flush=()=>{const t=performance.now();activeMs.current+=t-last;last=t;const seconds=Math.floor(activeMs.current/1000);if(current.current.activeSeconds!==seconds)update(s=>({...s,activeSeconds:seconds,updatedAt:now(),revision:s.revision+1}));};
+  const flush=()=>{const t=performance.now();if(current.current.status!=='in_progress'){last=t;return;}activeMs.current+=Math.max(0,t-last);last=t;const seconds=Math.floor(activeMs.current/1000);if(current.current.activeSeconds!==seconds)update(s=>({...s,activeSeconds:seconds,updatedAt:now(),revision:s.revision+1}));};
   const sync=()=>{if(interval!==undefined){flush();clearInterval(interval);interval=undefined;}if(!document.hidden&&current.current.status==='in_progress'&&!clockPaused.current){last=performance.now();interval=window.setInterval(flush,500);}};
-  syncClock.current=sync;sync();document.addEventListener('visibilitychange',sync);return()=>{if(interval!==undefined){flush();clearInterval(interval);}document.removeEventListener('visibilitychange',sync);syncClock.current=()=>{};};
+  const hide=()=>{if(interval!==undefined){flush();clearInterval(interval);interval=undefined;}};
+  resetClock.current=(seconds,exact=false)=>{const t=performance.now();activeMs.current=exact?seconds*1000:Math.max(seconds*1000,activeMs.current+(interval!==undefined?Math.max(0,t-last):0));last=t;};
+  syncClock.current=sync;sync();document.addEventListener('visibilitychange',sync);window.addEventListener('pagehide',hide);window.addEventListener('pageshow',sync);return()=>{hide();document.removeEventListener('visibilitychange',sync);window.removeEventListener('pagehide',hide);window.removeEventListener('pageshow',sync);syncClock.current=()=>{};resetClock.current=()=>{};};
  },[session.status]);
  useEffect(()=>{if(session.status==='completed')result.current?.focus();},[session.status]);
  const e=activeEntry(puzzle,session),selected=new Set(e?entryCells(e):[]),entries=orderedEntries(puzzle),filled=Object.keys(session.lettersByCell).length,total=puzzle.gridRows.join('').replaceAll('#','').length,completed=session.status==='completed';
@@ -38,8 +48,8 @@ export function PreviewGame({puzzle,audience='private-preview',onRestart,introdu
  };
  const onCheck=()=>{const r=checkWord(current.current,puzzle,now());update(()=>r.session);setMessage(r.verdict==='correct'?'Esta palavra está correta.':r.verdict==='incomplete'?'Ainda faltam letras nesta palavra.':'Há letras incorretas nesta palavra. Revise os cruzamentos.');focus();};
  const onReveal=()=>{clockPaused.current=true;syncClock.current();let yes:boolean;try{yes=window.confirm('Revelar esta letra? A partida será marcada como assistida.');}finally{clockPaused.current=false;syncClock.current();}if(yes){update(s=>revealLetter(s,puzzle,now()));setMessage('Letra revelada. Partida assistida.');}focus();};
- const onFinish=()=>{const next=finishSession(current.current,puzzle,now());if(next.status!=='completed'){setMessage('Ainda faltam letras ou há algo a revisar.');focus();}else{update(()=>next);setMessage('');}};
- const restart=()=>{if(!onRestart)return;let yes=true;if(current.current.status!=='completed'&&Object.keys(current.current.lettersByCell).length){clockPaused.current=true;syncClock.current();try{yes=window.confirm('Recomeçar esta demonstração? O progresso atual será apagado.');}finally{clockPaused.current=false;syncClock.current();}}if(yes)onRestart();else focus();};
+ const onFinish=()=>{syncClock.current();const next=finishSession(current.current,puzzle,now());if(next.status!=='completed'){setMessage('Ainda faltam letras ou há algo a revisar.');focus();}else{update(()=>next);setMessage('');}};
+ const restart=()=>{if(!onRestart)return;let yes=true;if(current.current.status==='completed'||Object.keys(current.current.lettersByCell).length||current.current.checksUsed||current.current.assistsUsed||current.current.activeSeconds){clockPaused.current=true;syncClock.current();try{yes=window.confirm(repository?.persistent?'Recomeçar esta demonstração? Uma nova partida será criada; a anterior continuará salva.':'Recomeçar esta demonstração? O progresso atual será apagado.');}finally{clockPaused.current=false;syncClock.current();}}if(yes)onRestart();else focus();};
  return <main className="preview-shell" aria-label={publicDemo?'Entrelinhas':'Entrelinhas — preview privado'}>
   {introduction??<><header className="masthead"><div><p className="eyebrow">UM TEMPO ENTRE PALAVRAS</p><h1>Entrelinhas<span aria-hidden="true">.</span></h1></div><p className="preview-badge">{publicDemo?'Entrelinhas · Alpha experimental':'Experimental · draft · não publicado'}</p></header>
   <div className="intro"><h2>Só mais um cruzamento.</h2><p>{puzzle.entries.length} pistas, uma letra por encontro.</p></div>

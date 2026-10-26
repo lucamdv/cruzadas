@@ -31,7 +31,7 @@ describe('Alpha público do Entrelinhas', () => {
     expect(screen.getByText('Entrelinhas · Alpha experimental')).toBeVisible();
     expect(screen.getAllByRole('gridcell')).toHaveLength(121);
     expect(screen.getByText(/DEMO.*EXPERIMENTAL/)).toBeVisible();
-    expect(screen.getByText(/Recarregar apaga o progresso/)).toBeVisible();
+    expect(screen.getByText(/Progresso somente em memória/)).toBeVisible();
     expect(screen.queryByText(/preview privado|não publicado/i)).not.toBeInTheDocument();
     const input = screen.getByRole('textbox', { name: 'Digite a resposta' });
     fireEvent.input(input, { target: { value: 'SOL' }, inputType: 'insertFromPaste' });
@@ -39,7 +39,7 @@ describe('Alpha público do Entrelinhas', () => {
     expect(screen.getByRole('status')).toHaveTextContent('Esta palavra está correta.');
   });
 
-  it('preserva progresso ao cancelar e reinicia a mesma demo após confirmação', () => {
+  it('preserva progresso ao cancelar e reinicia a mesma demo após confirmação', async () => {
     render(<App />);
     fireEvent.input(screen.getByRole('textbox'), { target: { value: 'S' }, inputType: 'insertText' });
     const confirmation = vi.spyOn(window, 'confirm').mockReturnValue(false);
@@ -47,11 +47,11 @@ describe('Alpha público do Entrelinhas', () => {
     expect(screen.getByRole('gridcell', { name: /Linha 2, coluna 1/ })).toHaveTextContent('S');
     confirmation.mockReturnValue(true);
     fireEvent.click(screen.getByRole('button', { name: 'Recomeçar demonstração' }));
-    expect(screen.getByText(/0 de \d+ casas preenchidas/)).toBeVisible();
+    expect(await screen.findByText(/0 de \d+ casas preenchidas/)).toBeVisible();
     expect(screen.getByRole('button', { name: 'Finalizar partida' })).toBeEnabled();
   });
 
-  it('confirma revelações, conclui todas as palavras e permite jogar novamente', () => {
+  it('confirma revelações, conclui todas as palavras e permite jogar novamente', async () => {
     render(<App />);
     const input = screen.getByRole('textbox');
     const confirmation = vi.spyOn(window, 'confirm').mockReturnValue(false);
@@ -69,8 +69,8 @@ describe('Alpha público do Entrelinhas', () => {
     expect(screen.getByText(/11 respostas · 1 ajuda/)).toBeVisible();
     confirmation.mockClear();
     fireEvent.click(screen.getByRole('button', { name: 'Recomeçar demonstração' }));
-    expect(confirmation).not.toHaveBeenCalled();
+    expect(confirmation).toHaveBeenCalledOnce();
+    expect(await screen.findByText('0 de 39 casas preenchidas')).toBeVisible();
     expect(screen.queryByRole('heading', { name: 'Partida concluída' })).not.toBeInTheDocument();
-    expect(screen.getByText('0 de 39 casas preenchidas')).toBeVisible();
   });
 });
