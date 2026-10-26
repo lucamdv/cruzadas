@@ -164,6 +164,27 @@ interface PersistedStateV1 {
 
 Chave única sugerida `entrelinhas:state:v1`. Escritas versionadas e leitura defensiva (array não confiável, números não negativos, datas canônicas, quantidade de dados com limites). Guardar sessões suficientes para retomar último diário/livre; limitar retenção de sessões antigas por política explicitada no código, **nunca** remover conclusões diárias para economizar espaço. `bestStreak` deriva do histórico completo. Concluir pela segunda vez a mesma data → o mesmo resultado (idempotência).
 
+### GUIA 04.4 — salvamento do Alpha
+
+Implementação em `src/storage`, chave `entrelinhas:state:v1`, formato canônico
+`PersistedStateV1`. JSON limitado a 2 MiB UTF-16; leitura e escrita estritas,
+V1 idempotente e versões desconhecidas rejeitadas sem apagar o blob anterior.
+Sem retenção destrutiva para caber na quota. Restauro exige puzzle/catalogVersion,
+casas, seleção e conclusão coerentes com a demonstração. Restart confirmado
+cria outra identidade e conserva a anterior e os demais registros.
+
+Web Locks serializam a releitura e alteração da chave. Sem locks ou storage,
+quota, corrupção e conflitos divergentes ativam memória com aviso. Conflitos
+preservam os snapshots na página e o registro remoto; `Usar partida salva`
+revalida a escolha e invalida escritas antigas. Relógios combinam o máximo,
+não a soma; conclusão é idempotente e não altera diário/streak.
+
+`Salvando` significa que o HEAD ainda não foi confirmado. `beforeunload`
+sincroniza o relógio e solicita aviso cancelável enquanto há pendência.
+Ficar permite aguardar commit; confirmar saída apesar do aviso, encerramento
+abrupto ou ausência do evento no navegador pode perder a última escrita.
+Não há transação no unload nem sincronização entre dispositivos/origens.
+
 ## 5. Interfaces puras do domínio
 
 Assinaturas sugeridas para começar. Mudanças de nome exigem atualização conjunta de guia, testes e docs.
